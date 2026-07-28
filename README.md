@@ -76,4 +76,4 @@ in Grafana (**Dashboards → New → Import**) against your Prometheus data sour
 
 ## License
 
-Apache-2.0
+MIT
