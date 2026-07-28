@@ -1,0 +1,15 @@
+.git/
+.gitignore
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+dashboards/
+config.yaml
+*.local.yaml
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/

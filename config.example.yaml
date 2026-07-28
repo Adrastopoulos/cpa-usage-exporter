@@ -1,0 +1,96 @@
+# cpa-usage-exporter configuration.
+#
+# Every key here is optional except cpa.management_key. Anything omitted falls
+# back to the default shown. Environment variables override this file: the
+# variable name is CPA_ plus the underscored path, so `cpa.management_url`
+# becomes CPA_MANAGEMENT_URL and `prometheus.port` becomes CPA_PROMETHEUS_PORT.
+#
+# Point the exporter at this file with --config, or set CPA_CONFIG_FILE.
+# Validate it without starting the collector loop:
+#
+#   cpa-usage-exporter --config config.yaml --check-config
+
+# Which sink receives collected records: "prometheus" or "bigquery".
+sink: prometheus
+
+# How often to run a collection cycle, in seconds.
+#
+# This MUST be shorter than CPA's `redis-usage-queue-retention-seconds` (default
+# 60s) or usage records expire before they are read. Either raise retention on
+# the CPA side or lower this. Note the queue is destructive: only one consumer
+# can drain it, so do not run two exporters against the same CPA instance.
+interval_seconds: 60
+
+log_level: INFO
+
+cpa:
+  # Base URL of the CPA management API, including the /v0/management prefix.
+  management_url: http://127.0.0.1:8317/v0/management
+
+  # Management key, sent as a bearer token. Required.
+  # Prefer supplying this as CPA_MANAGEMENT_KEY rather than committing it here.
+  management_key: ""
+
+  # Records requested per usage-queue call, and the maximum number of calls per
+  # cycle. The exporter keeps requesting until a short read means the queue is
+  # empty, so the cap only bounds how much of a backlog one cycle will chew
+  # through.
+  queue_batch: 1000
+  queue_max_batches: 20
+
+  timeout_seconds: 30
+  verify_tls: true
+
+  # Individual collectors can be turned off.
+  collect_usage_queue: true
+  collect_auth_files: true
+
+# Provider subscription-quota polling.
+#
+# Reads CPA's credential files to obtain access tokens, then queries each
+# provider's own usage endpoint for the 5-hour and 7-day rate-limit windows that
+# per-request records do not report. Requires read access to the auth directory.
+quota:
+  enabled: false
+  auth_dir: ""
+  # Provider endpoints are rate-limited and their values move slowly, so this
+  # runs on a slower cadence than the main loop.
+  interval_seconds: 300
+  timeout_seconds: 20
+  providers:
+    - claude
+    - codex
+
+# Cost estimation from a model price map, in currency units per million tokens.
+pricing:
+  enabled: true
+  # Path to your own price map. Leave empty to use only the bundled defaults.
+  path: ""
+  # When true, your file is overlaid on the bundled entries rather than
+  # replacing them. Set false to use exclusively your own map.
+  fallback_to_bundled: true
+  currency: USD
+
+prometheus:
+  host: 0.0.0.0
+  port: 9185
+  # Histogram buckets in seconds.
+  latency_buckets: [0.1, 0.25, 0.5, 1, 2, 5, 10, 30, 60, 120, 300]
+  ttft_buckets: [0.1, 0.25, 0.5, 1, 2, 5, 10, 30, 60]
+  # Label cardinality controls. The api_key label carries only a redacted
+  # suffix, but multiplies series by your number of client keys.
+  include_endpoint_label: true
+  include_api_key_label: false
+
+# Only read when sink is "bigquery". Requires the extra:
+#   pip install 'cpa-usage-exporter[bigquery]'
+bigquery:
+  project: ""
+  # The dataset must already exist; tables are created automatically.
+  dataset: ""
+  # Leave empty to use the client default.
+  location: ""
+  table_prefix: cliproxy_
+  # Path to a service account JSON key. Leave empty to use Application Default
+  # Credentials, which is the right choice for workload identity.
+  credentials_file: ""

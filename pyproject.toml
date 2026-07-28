@@ -1,0 +1,45 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "cpa-usage-exporter"
+version = "0.1.0"
+description = "Usage and quota exporter for CLIProxyAPI: drains the CPA usage queue and polls provider quota, into Prometheus or BigQuery."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+keywords = ["cliproxyapi", "prometheus", "exporter", "openmetrics", "llm", "observability"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: System Administrators",
+  "Programming Language :: Python :: 3",
+  "Topic :: System :: Monitoring",
+]
+dependencies = [
+  "prometheus-client>=0.20",
+  "PyYAML>=6.0",
+  "requests>=2.31",
+]
+
+[project.optional-dependencies]
+bigquery = ["google-cloud-bigquery>=3.17"]
+
+[project.scripts]
+cpa-usage-exporter = "cpa_usage_exporter.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/router-for-me/CLIProxyAPI"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/cpa_usage_exporter"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src", "dashboards", "README.md", "config.example.yaml"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
