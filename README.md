@@ -9,13 +9,12 @@ plus the account health and 5h/7d quota windows the queue omits.
 
 ## Install
 
-Not on PyPI yet. Install from git, or build the image with
-`docker build -t cpa-usage-exporter .`.
-
 ```bash
 pip install git+https://github.com/Adrastopoulos/cpa-usage-exporter
 pip install 'cpa-usage-exporter[bigquery] @ git+https://github.com/Adrastopoulos/cpa-usage-exporter'
 ```
+
+Or build the image with `docker build -t cpa-usage-exporter .`.
 
 ## Quickstart
 
@@ -67,8 +66,8 @@ in Grafana (**Dashboards → New → Import**) against your Prometheus data sour
   pruned. Keep `interval_seconds` below that window and run exactly one consumer;
   two drainers each see a random half of your traffic.
 - Quota comes from undocumented vendor endpoints
-  (`api.anthropic.com/api/oauth/usage`, `chatgpt.com/backend-api/wham/usage`). A
-  broken poller logs a warning and reports nothing rather than failing the cycle.
+  (`api.anthropic.com/api/oauth/usage`, `chatgpt.com/backend-api/wham/usage`), so
+  it may break without notice.
 - Costs are estimates: bundled prices drift, and subscription (OAuth) traffic is
   not token-metered by the provider, so treat that portion as what the traffic
   would have cost on the API. Unpriced models increment
