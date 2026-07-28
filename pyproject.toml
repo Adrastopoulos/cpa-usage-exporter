@@ -12,9 +12,17 @@ license = { text = "Apache-2.0" }
 keywords = ["cliproxyapi", "prometheus", "exporter", "openmetrics", "llm", "observability"]
 classifiers = [
   "Development Status :: 4 - Beta",
+  "Environment :: No Input/Output (Daemon)",
   "Intended Audience :: System Administrators",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Topic :: System :: Monitoring",
+  "Topic :: System :: Systems Administration",
 ]
 dependencies = [
   "prometheus-client>=0.20",
@@ -29,7 +37,10 @@ bigquery = ["google-cloud-bigquery>=3.17"]
 cpa-usage-exporter = "cpa_usage_exporter.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/router-for-me/CLIProxyAPI"
+Homepage = "https://github.com/Adrastopoulos/cpa-usage-exporter"
+Repository = "https://github.com/Adrastopoulos/cpa-usage-exporter"
+Issues = "https://github.com/Adrastopoulos/cpa-usage-exporter/issues"
+CLIProxyAPI = "https://github.com/router-for-me/CLIProxyAPI"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/cpa_usage_exporter"]
