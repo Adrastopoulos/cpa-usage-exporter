@@ -72,7 +72,3 @@ in Grafana (**Dashboards → New → Import**) against your Prometheus data sour
   not token-metered by the provider, so treat that portion as what the traffic
   would have cost on the API. Unpriced models increment
   `cpa_unpriced_requests_total`.
-
-## License
-
-MIT
