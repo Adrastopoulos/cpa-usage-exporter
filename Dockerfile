@@ -17,6 +17,7 @@ FROM python:3.12-slim
 
 LABEL org.opencontainers.image.title="cpa-usage-exporter" \
       org.opencontainers.image.description="Usage, cost and quota exporter for CLIProxyAPI" \
+      org.opencontainers.image.source="https://github.com/Adrastopoulos/cpa-usage-exporter" \
       org.opencontainers.image.licenses="Apache-2.0"
 
 COPY --from=build /install /usr/local
